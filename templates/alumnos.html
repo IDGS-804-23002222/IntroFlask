@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- PARA IMPORTAR UN MACRO -->
+{% import "_macros.html" as macros %}
+
+<!-- PARA USAR UN MACRO -->
+<form method="post" action="/alumnos" novalidate>
+    {{form.csrf_token}}
+    <input type="hidden" name="csrf_token" value="{{csrf_token}}">
+    <h2>Registro alumno</h2>
+    {{macros.camposNuevos(form.matricula)}}
+    {{macros.camposNuevos(form.nombre)}}
+    {{macros.camposNuevos(form.apellido)}}
+    {{macros.camposNuevos(form.correo)}}
+
+<input type="submit" class="btn btn-primary" name="btn" value="Guardar">
+</form>
+
+<h2>Matricula: {{mat}}</h2>
+<h2>Nombre: {{nom}}</h2>
+<h2>Apellido: {{ape}}</h2>
+<h2>Correo: {{email}}</h2>
+
+
+{% endblock %}
