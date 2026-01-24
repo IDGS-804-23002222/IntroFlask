@@ -1,7 +1,11 @@
 from flask import Flask, render_template, request, session
+import math
+import forms 
+from flask_wtf.csrf import CSRFProtect
 
 app= Flask(__name__)
 app.secret_key='clave secreta'
+csrf=CSRFProtect()
 
 #decorador o ruta
 @app.route('/')
@@ -22,9 +26,39 @@ def func():
 def saludo2():
     return render_template("saludo2.html")
 
-@app.route("/operasBas")
+@app.route("/operasBas", methods=['GET','POST'])
 def operasBas():
-    return render_template("operaBas.html")
+    res=None
+    if request.method == 'POST':
+        n1=request.form.get('num1')
+        n2=request.form.get('num2')
+        operacion=request.form.get('operacion')
+        
+        if operacion =='sumar':
+            res=float(n1)+float(n2)
+        elif operacion =='restar':
+            res=float(n1)-float(n2)
+        elif operacion =='multiplicar':
+            res=float(n1)*float(n2)
+        elif operacion=='dividir':
+            res=float(n1)/float(n2)
+    return render_template("operaBas.html", res=res)
+
+@app.route("/distancia", methods=['GET','POST'])
+def distancia():
+    cuadradoy=None
+    cuadradox=None
+    distancia=None
+    if request.method == 'POST':
+        x1=request.form.get('x1')
+        x2=request.form.get('x2')
+        y1=request.form.get('y1')
+        y2=request.form.get('y2')
+        cuadradox= (float(x2)-float(x1)) ** 2
+        cuadradoy= (float(y2)-float(y1)) ** 2
+        distancia=math.sqrt(cuadradox+cuadradoy)
+    return render_template("distancia.html", distancia=distancia)
+
 
 @app.route("/resultado", methods=["GET","POST"])
 def resul1():
@@ -70,8 +104,23 @@ def operas():
     </form>
     '''
 
+@app.route("/alumnos", methods=['GET','POST'])
+def alumnos():
+    mat=0
+    nom=''
+    ape=''
+    email=''
+    alumno_clas=forms.userForm(request.form)
+    if request.method=='POST' and alumno_clas.validate():
+        mat=alumno_clas.matricula.data
+        nom=alumno_clas.nombre.data
+        ape=alumno_clas.apellido.data
+        email=alumno_clas.correo.data
+    return render_template("alumnos.html", form=alumno_clas, mat=mat, nom=nom,ape=ape, email=email)
 
 if __name__=='__main__':
+    #habilita la app solamente si se agrega la clave especificada (clave_secreta)
+    #csrf.init_app(app)
     #con el debug se puede actualizar el servidor conforma se guardan los cambios, si no se coloca, se debe reiniciar
     #el servidor para que se apliquen los cambios
     app.run(debug=True)

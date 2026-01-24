@@ -1,4 +1,16 @@
 {% extends "layout.html" %}
 {% block content %}
- <h1>Hola desde papulandia salu2</h1>
+
+<!-- PARA IMPORTAR UN MACRO -->
+{% import "_macros.html" as macros %}
+
+<!-- PARA USAR UN MACRO -->
+<form method="post" action="">
+    
+{{macros.datos('nombre', 'Escribe tu nombre')}}
+{{macros.datos('edad', 'Escribe tu edad', 'number')}}
+{{macros.datos('email', 'Escribe tu email', 'email')}}
+{{macros.datos('password', 'Escribe tu contrasenia', 'password')}}
+
+
 {% endblock %}
