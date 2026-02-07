@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session
 import math
 import forms 
 from flask_wtf.csrf import CSRFProtect
+from CinepolisForm import CinepolisForm
 
 app= Flask(__name__)
 app.secret_key='clave secreta'
@@ -117,6 +118,42 @@ def alumnos():
         ape=alumno_clas.apellido.data
         email=alumno_clas.correo.data
     return render_template("alumnos.html", form=alumno_clas, mat=mat, nom=nom,ape=ape, email=email)
+
+PRECIO_BOLETO = 12.00
+
+@app.route("/cinepolis", methods=["GET", "POST"])
+def cinepolis():
+    form = CinepolisForm()
+    total = None
+    mensaje = None
+
+    if form.validate_on_submit():
+        nombre = form.nombre.data
+        compradores = form.compradores.data
+        boletos = form.boletos.data
+        tarjeta = form.tarjeta.data
+
+        subtotal = boletos * PRECIO_BOLETO
+
+        # DESCUENTO POR BOLETOS
+        if boletos > 5:
+            subtotal *= 0.85
+        elif boletos >= 3:
+            subtotal *= 0.90
+
+        # DESCUENTO TARJETA CINECO
+        if tarjeta == "si":
+            subtotal *= 0.90
+
+        total = f"${subtotal:,.2f}"
+        mensaje = f"Compra realizada por {nombre}"
+
+    return render_template(
+        "cinepolis.html",
+        form=form,
+        total=total,
+        mensaje=mensaje
+    )
 
 if __name__=='__main__':
     #habilita la app solamente si se agrega la clave especificada (clave_secreta)

@@ -1,0 +1,43 @@
+{% import "_macros.html" as macros %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Cinépolis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<div class="contenedor">
+    <h1 class="titulo">Cinépolis</h1>
+    <h2 class="subtitulo">La capital del cine</h2>
+
+    <form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="panel">
+        <h3>Entradas</h3>
+        {{ macros.camposNuevosCine(form.nombre) }}
+        {{ macros.camposNuevosCine(form.compradores) }}
+        {{ macros.camposNuevosCine(form.boletos) }}
+
+        <label>Tarjeta CINECO</label>
+        {{ form.tarjeta() }}
+    </div>
+
+    <div class="panel">
+        <h3>Salidas</h3>
+        <input type="text" class="form-control" value="{{ total if total else '' }}" disabled>
+        <p>{{ mensaje }}</p>
+    </div>
+
+    <div class="acciones">
+        {{ form.submit() }}
+    </div>
+</form>
+
+</div>
+
+</body>
+</html>

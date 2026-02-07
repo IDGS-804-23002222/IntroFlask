@@ -15,7 +15,7 @@
 {% if field.errors %}
 <ul>
     {% for error in field.errors %}
-    <li>
+    <li style="color:red">
         {{error}}
     </li>
     {% endfor %}
@@ -23,3 +23,19 @@
 {% endif %}
 
 {% endmacro %}
+
+{% macro camposNuevosCine(field) %}
+<div class="mb-3">
+    {{ field.label(class="form-label") }}
+    {{ field(class="form-control") }}
+
+    {% if field.errors %}
+        <ul>
+            {% for error in field.errors %}
+                <li style="color:red">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endmacro %}
+
